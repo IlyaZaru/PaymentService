@@ -1,0 +1,100 @@
+openapi: "3.0.3"
+info:
+  title: Сервис "Поступление платежа"
+  version: 1.0.0
+paths:
+  /payment:
+    post:
+      tags:
+        - payment_service
+      requestBody:
+        description: Платеж
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Payment'
+
+      responses:
+        200:
+          description: Запрос обработан успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        400:
+          description: Неправильный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        500:
+          description: Произошла техническая ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+components:
+  schemas:
+    Payment:
+      type: object
+      required:
+        - requestId
+        - clientId
+        - clientName
+        - email
+        - store
+        - currentBalance
+        - amountPayment
+      properties:
+        requestId:
+          description: "ID запроса"
+          type: string
+          format: uuid
+          example: 895977d9-d7a4-4fef-a4ee-d99189fd608f
+        clientId:
+          description: "ID клиента"
+          type: string
+          format: uuid
+          example: 895977d9-d7a4-4fef-a4ee-d99189fd608f
+        clientName:
+          description: "Имя клиента"
+          type: string
+          example: 'Ивано Иван Иванович'
+        email:
+          description: "Электронная почта"
+          type: string
+          example: 'pochta@mail.ru'
+        store:
+          description: "Наименование магазина"
+          type: string
+          example: 'Пятерочка'
+        currentBalance:
+          description: "Текущий счет"
+          type: number
+          format: double
+          example: 3434.3
+        amountPayment:
+          description: "Сумма платежа"
+          type: number
+          format: double
+          example: 45.33
+    PaymentResponse:
+      type: object
+      required:
+        - requestId
+        - status
+      properties:
+        requestId:
+          description: "ID запроса"
+          type: string
+          format: uuid
+          example: 895977d9-d7a4-4fef-a4ee-d99189fd608f
+        status:
+          description: "Статус платежа"
+          type: string
+          enum: [SUCCES, ERROR]
+        errorMessage:
+          description: "Текст ошибки"
+          type: string
+          example: 'Текст ошибки'
