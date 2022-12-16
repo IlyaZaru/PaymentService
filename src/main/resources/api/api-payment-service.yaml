@@ -3,7 +3,38 @@ info:
   title: Сервис "Поступление платежа"
   version: 1.0.0
 paths:
-  /payment:
+  /payment/byTemplate:
+    post:
+      tags:
+        - payment_service
+      requestBody:
+        description: Платеж
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Payment'
+
+      responses:
+        200:
+          description: Запрос обработан успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        400:
+          description: Неправильный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        500:
+          description: Произошла техническая ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+  /payment/bySender:
     post:
       tags:
         - payment_service

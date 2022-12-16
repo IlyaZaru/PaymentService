@@ -1,2 +1,12 @@
 server:
   port: 8101
+
+kafka:
+  payment-topic: 'payments'
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.UUIDSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
