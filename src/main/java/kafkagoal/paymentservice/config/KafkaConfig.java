@@ -12,7 +12,7 @@ import java.util.UUID;
 
 
 @Configuration
-public class KafkaSenderConfig {
+public class KafkaConfig {
 
     @Bean
     public KafkaSender<UUID, Payment> reactiveKafkaSender(KafkaProperties kafkaProperties) {

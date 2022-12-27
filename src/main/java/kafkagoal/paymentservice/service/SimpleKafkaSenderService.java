@@ -26,7 +26,7 @@ public class SimpleKafkaSenderService implements KafkaSenderService {
 
     @Override
     public Mono<SenderResult<UUID>> sendToKafkaByReactiveProducerTemplate(Payment payment) {
-        var correlationId = getCorrelationId(payment);
+        var correlationId = payment.getRequestId();
         return reactiveKafkaProducerTemplate.send(convertToSenderRecord(payment))
                 .doOnSuccess(senderResult -> log.info("sendToKafkaByReactiveProducerTemplate(): " + logSuccessResult(senderResult)))
                 .doOnError(throwable -> log.error("sendToKafkaByReactiveProducerTemplate(): Error of dispatch throwable = {}", throwable.getMessage()))
@@ -35,7 +35,7 @@ public class SimpleKafkaSenderService implements KafkaSenderService {
 
     @Override
     public Mono<SenderResult<UUID>> sendToKafkaByReactiveSender(Payment payment) {
-        var correlationId = getCorrelationId(payment);
+        var correlationId = payment.getRequestId();
         return kafkaSender.send(Mono.just(convertToSenderRecord(payment)))
                 .doOnNext(senderResult -> log.info("sendToKafkaByReactiveSender():  " + logSuccessResult(senderResult)))
                 .doOnError(throwable -> log.error("sendToKafkaByReactiveSender(): Error of dispatch throwable = {}", throwable.getMessage()))
@@ -50,14 +50,10 @@ public class SimpleKafkaSenderService implements KafkaSenderService {
                 System.currentTimeMillis(),
                 payment.getClientId(),
                 payment,
-                getCorrelationId(payment)
+                payment.getRequestId()
         );
-        senderRecord.headers().add(KafkaHeaders.CORRELATION_ID, getCorrelationId(payment).toString().getBytes());
+        senderRecord.headers().add(KafkaHeaders.CORRELATION_ID, payment.getRequestId().toString().getBytes());
         return senderRecord;
-    }
-
-    private UUID getCorrelationId(Payment payment) {
-        return payment.getRequestId();
     }
 
     private String logSuccessResult(SenderResult<UUID> result) {
