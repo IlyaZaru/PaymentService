@@ -18,7 +18,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class PaymentController implements PaymentServiceApi {
+public class ApiPaymentService implements PaymentServiceApi {
     private final UUID DEFAULT_REQUEST_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
     private final KafkaSenderService kafkaSenderService;
 
