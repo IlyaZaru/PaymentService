@@ -22,6 +22,10 @@ public class ApiPaymentService implements PaymentServiceApi {
     private final UUID DEFAULT_REQUEST_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
     private final KafkaSenderService kafkaSenderService;
 
+    /**
+        используется 2 url (cам url смотрите в resources/api/api-payment-service.yaml)
+        через один продюсером kafka является KafkaSender, через другой импользуется ReactiveKafkaProducerTemplate
+    **/
     @Override
     public Mono<ResponseEntity<PaymentResponse>> paymentBySenderPost(Mono<Payment> payment, ServerWebExchange exchange) {
         return payment

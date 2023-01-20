@@ -14,12 +14,14 @@ import java.util.UUID;
 @Configuration
 public class KafkaConfig {
 
+    //Создаем kafka продюсер типа KafkaSender, kafkaProperties берется из application.yml
     @Bean
     public KafkaSender<UUID, Payment> reactiveKafkaSender(KafkaProperties kafkaProperties) {
         SenderOptions<UUID, Payment> senderOptions = SenderOptions.create(kafkaProperties.buildProducerProperties());
         return KafkaSender.create(senderOptions);
     }
 
+    //Создаем kafka продюсер типа ReactiveKafkaProducerTemplate, но по сути своей это обертка KafkaSender
     @Bean
     public ReactiveKafkaProducerTemplate<UUID, Payment> reactiveKafkaProducerTemplate(KafkaProperties kafkaProperties) {
         SenderOptions<UUID, Payment> senderOptions = SenderOptions.create(kafkaProperties.buildProducerProperties());
