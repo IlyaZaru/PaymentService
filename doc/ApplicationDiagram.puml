@@ -1,0 +1,25 @@
+@startuml
+skinparam backgroundColor #ecfaf4
+skinparam participantFontColor automatic
+boundary PaymentSupplier order 1 #red
+boundary CustomerPaymentStatistic order 6 #red
+participant "PaymentService" as PS order 2 #5233ec
+participant PymentsProcessorService as PPS order 4 #5233ec
+participant YandexMailServer as YMS order 5 #edea28
+queue Kafka order 3 #68e95f
+group Receive payment
+  PaymentSupplier -[#red]> PS : incoming payment
+  PS -[#68e95f]> Kafka : send payment
+  Kafka -[#68e95f]> PS: result of dispatch
+  PS -[#red]> PaymentSupplier : response
+end
+group Payment notification
+  Kafka -[#68e95f]> PPS : consume payment
+  PPS -[#edea28]> YMS : send notification by SMTPS
+end
+group Payments statistic
+  CustomerPaymentStatistic -[#red]> PPS : incoming ClientInfo
+  PPS <-[#68e95f]> Kafka : consume all payment
+  PPS -[#red]> CustomerPaymentStatistic : get payments statistic
+end
+@enduml
